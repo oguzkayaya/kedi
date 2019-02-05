@@ -104,11 +104,58 @@ const webpackConfig = merge(baseWebpackConfig, {
     ]),
     // service worker caching
     new SWPrecacheWebpackPlugin({
-      cacheId: 'cropchat',
+      cacheId: 'my-vue-app',
       filename: 'service-worker.js',
       staticFileGlobs: ['dist/**/*.{js,html,css}'],
       minify: true,
-      stripPrefix: 'dist/'
+      stripPrefix: 'dist/',
+      runtimeCaching: [
+        {
+          // Match any request ends with .png, .jpg, .jpeg or .svg.
+          urlPattern: /\.(?:png|jpg|jpeg|svg)$/,
+  
+          // Apply a cache-first strategy.
+          handler: 'cacheFirst',
+  
+          options: {
+            // Use a custom cache name.
+            cacheName: 'images',
+  
+            // Only cache 10 images.
+            expiration: {
+              maxEntries: 10,
+            },
+          },
+        },
+      {
+        urlPattern: /^https:\/\/fonts\.googleapis\.com\//,
+        handler: 'cacheFirst'
+      },
+      {
+        urlPattern: /^https:\/\/fonts\.gstatic\.com\//,
+        handler: 'cacheFirst'
+      },
+      {
+        urlPattern: /^https:\/\/code\.getmdl\.io\//,
+        handler: 'cacheFirst'
+      },
+      {
+        urlPattern: /^https:\/\/thecatapi\.com\/api\/images\/get\.php\?id/,
+        handler: 'cacheFirst'
+     },
+      {
+        urlPattern: /^https:\/\/cdn2\.thecatapi\/com\/images/,
+        handler: 'cacheFirst'
+      },
+     {
+        urlPattern: /^https:\/\/(\d+)\.media\.tumblr\.com\//,
+        handler: 'cacheFirst'
+     },
+     {
+        urlPattern: /^http:\/\/(\d+)\.media\.tumblr\.com\//,
+        handler: 'cacheFirst'
+     },
+    ]
     })
   ]
 })
